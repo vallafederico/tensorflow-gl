@@ -1,6 +1,7 @@
 import Dom from "@m/dom";
 import Viewport from "@m/viewport";
 import Gl from "./gl/gl";
+import { Face } from "@m/ai";
 
 // import { ASSETS } from "@a/";
 
@@ -16,10 +17,11 @@ class App {
 
   init() {
     this.dom = new Dom();
-
     this.gl = new Gl();
+    this.face = new Face();
 
     this.initEvents();
+
     // this.render()
   }
 
@@ -31,6 +33,7 @@ class App {
   resize({ contentRect }) {
     this.viewport?.resize();
     this.dom?.resize();
+    this.face?.resize();
   }
 
   render() {
