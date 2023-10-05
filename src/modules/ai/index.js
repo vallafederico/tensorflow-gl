@@ -4,6 +4,12 @@ import * as faceapi from "face-api.js";
 export class Face {
   constructor() {
     this.init();
+
+    this.xdirection = 0;
+    this.emo = {
+      happy: 0,
+      sur: 0,
+    };
   }
 
   async init() {
@@ -28,7 +34,6 @@ export class Face {
     this.canvas = faceapi.createCanvas(this.video);
     this.canvas.style.position = "absolute";
     this.canvas.style.left = 0;
-    this.canvas.style.border = "1px solid black";
     document.body.append(this.canvas);
 
     this.displaySize = {
@@ -59,8 +64,14 @@ export class Face {
 
     if (this.shouldPrint) {
       console.log(detections);
+
       this.shouldPrint = false;
     }
+
+    this.directionController(detections.landmarks._positions);
+
+    this.emo.happy = detections.expressions.happy;
+    this.emo.sur = detections.expressions.surprised;
 
     const resizedDetections = faceapi.resizeResults(
       detections,
@@ -75,8 +86,20 @@ export class Face {
       .getContext("2d")
       .clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    faceapi.draw.drawDetections(this.canvas, resizedDetections);
     faceapi.draw.drawFaceLandmarks(this.canvas, resizedDetections);
+    // faceapi.draw.drawDetections(this.canvas, resizedDetections);
     faceapi.draw.drawFaceExpressions(this.canvas, resizedDetections);
+  }
+
+  directionController(arr) {
+    //1 : LEFT — 28: NOSE CENTER — 17: RIGHT
+    // ballpark -200 / 200
+
+    const left = arr[0]._x;
+    const right = arr[16]._x;
+    const nose = arr[27]._x;
+
+    this.xdirection = Math.abs(left - nose) - Math.abs(nose - right);
+    // console.log(this.xdirection);
   }
 }

@@ -17,13 +17,17 @@
   /* z-index: 2; */
 }
 
+body {
+  background: black;
+}
+
 video {
   border: 1px colid blue;
-  width: 70vw;
+  width: 50vw;
   height: auto;
 
   position: relative;
-  opacity: 0.8;
+  opacity: 1;
   pointer-events: none;
 }
 

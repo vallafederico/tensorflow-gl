@@ -17,8 +17,8 @@ class App {
 
   init() {
     this.dom = new Dom();
-    this.gl = new Gl();
     this.face = new Face();
+    this.gl = new Gl();
 
     this.initEvents();
 

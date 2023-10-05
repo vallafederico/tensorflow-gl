@@ -2,6 +2,10 @@ import { Renderer, Orbit, Vec3 } from "ogl";
 import Cam from "./_camera.js";
 import Scene from "./_scene.js";
 
+export function lerp(v0, v1, t) {
+  return v0 * (1 - t) + v1 * t;
+}
+
 export default class {
   constructor() {
     this.wrapper = document.querySelector("[data-gl='c']");
@@ -9,9 +13,9 @@ export default class {
       dpr: Math.min(window.devicePixelRatio, 2),
     };
 
-    this.renderer = new Renderer({ dpr: 2 });
+    this.renderer = new Renderer({ dpr: 2, alpha: true });
     this.gl = this.renderer.gl;
-    this.gl.clearColor(0, 0, 0, 1);
+    this.gl.clearColor(0, 0, 0, 0);
 
     this.wrapper.appendChild(this.gl.canvas);
 
@@ -25,9 +29,14 @@ export default class {
 
     this.render();
 
-    this.controls = new Orbit(this.camera, {
-      target: new Vec3(0, 0, 0),
-    });
+    this.face = {
+      xcur: 0,
+      xtar: 0,
+    };
+
+    // this.controls = new Orbit(this.camera, {
+    //   target: new Vec3(0, 0, 0),
+    // });
   }
 
   render(scroll = 0) {
@@ -42,6 +51,14 @@ export default class {
       scene: this.scene,
       camera: this.camera,
     });
+
+    if (window.app) {
+      this.face.xtar = window.app.face?.xdirection * 0.02;
+      this.face.xcur = lerp(this.face.xcur, this.face.xtar, 0.05);
+      // console.log(this.face.xcur);
+
+      this.camera.rotation.y = -this.face.xcur * 0.1;
+    }
   }
 
   initEvents() {

@@ -16,6 +16,8 @@ export default class extends Program {
     this.uniforms = {
       u_time: { value: 0 },
       u_diff: { value: opt.diff || null },
+      //
+      u_a_happy: { value: 0 },
     };
   }
 
